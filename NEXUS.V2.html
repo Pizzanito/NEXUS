@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Ciencia | Space & Deep Ocean Exploration Platform</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        deepSpace: '#030712',
+                        abyssBlue: '#020B1A',
+                        neonCyan: '#00F0FF',
+                        goldStar: '#FFD700',
+                        artemisRed: '#FF2A5F'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #020617;
+            color: #E2E8F0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Design Tokens */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 240, 255, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -10px rgba(0, 240, 255, 0.15);
+        }
+
+        .text-gradient-cyan {
+            background: linear-gradient(135deg, #FFFFFF 0%, #38BDF8 50%, #00F0FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-gold {
+            background: linear-gradient(135deg, #FFF59D 0%, #F59E0B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        canvas {
+            touch-action: manipulation;
+        }
+
+        /* Ambient glowing background blobs */
+        .ambient-glow-1 {
+            position: absolute;
+            top: -10%;
+            left: 20%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0,240,255,0.08) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .ambient-glow-2 {
+            position: absolute;
+            top: 40%;
+            right: 10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(99,102,241,0.06) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00F0FF; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-cyan-500 selection:text-black relative">
+
+    <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-400 via-blue-600 to-indigo-600 flex items-center justify-center text-slate-950 font-bold text-xl shadow-lg shadow-cyan-500/20">
+                    <i class="fa-solid fa-atom text-slate-950"></i>
+                </div>
+                <div>
+                    <span class="font-display font-extrabold text-xl tracking-wider text-white block leading-none">NEXUS <span class="text-cyan-400">CIENCIA</span></span>
+                    <span data-i18n="navSubtitle" class="text-[10px] text-cyan-400/90 font-mono tracking-widest uppercase">Space & Deep Ocean Platform</span>
+                </div>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                <a href="#hero" data-i18n="navHome" class="hover:text-cyan-400 transition">Inicio</a>
+                <a href="#arcade" data-i18n="navArcade" class="hover:text-cyan-400 transition">Arcade</a>
+                <a href="#chat" data-i18n="navAI" class="hover:text-cyan-400 transition text-cyan-300 flex items-center gap-1.5"><i class="fa-solid fa-brain"></i> Asistente IA</a>
+                <a href="#accordion" data-i18n="navExplanations" class="hover:text-cyan-400 transition">Conocimiento</a>
+                <a href="#timeline" data-i18n="navTimeline" class="hover:text-cyan-400 transition">Cronología</a>
+                <a href="#reviews" data-i18n="navReviews" class="hover:text-cyan-400 transition">Reseñas</a>
+                <a href="#sources" data-i18n="navSources" class="hover:text-cyan-400 transition">Fuentes</a>
+            </nav>
+
+            <!-- Language Switcher & Call to Action -->
+            <div class="flex items-center gap-3">
+                <div class="bg-slate-900/90 border border-slate-700/80 rounded-xl p-1 flex items-center gap-1 text-xs font-bold font-mono">
+                    <button onclick="setLanguage('es')" id="lang-es" class="px-2.5 py-1 rounded-lg transition bg-cyan-500 text-slate-950 shadow">ES</button>
+                    <button onclick="setLanguage('en')" id="lang-en" class="px-2.5 py-1 rounded-lg transition text-slate-400 hover:text-white">EN</button>
+                    <button onclick="setLanguage('pt')" id="lang-pt" class="px-2.5 py-1 rounded-lg transition text-slate-400 hover:text-white">PT</button>
+                </div>
+
+                <a href="#chat" class="hidden sm:flex bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs tracking-wider uppercase transition shadow-lg shadow-cyan-500/25 items-center gap-2">
+                    <i class="fa-solid fa-sparkles text-sm"></i> <span data-i18n="btnAskAI">Preguntar IA</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative pt-12 pb-16 md:py-24 overflow-hidden z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+            
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-mono tracking-wide mb-6">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                <span data-i18n="heroBadge">PLATAFORMA CIENTÍFICA INTEGRAL & ASISTENTE IA EN VIVO</span>
+            </div>
+
+            <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-tight max-w-5xl mx-auto">
+                <span data-i18n="heroTitle1">Explorando las Fronteras de la</span> <span class="text-gradient-cyan" data-i18n="heroTitle2">Naturaleza Extremas</span>
+            </h1>
+
+            <p data-i18n="heroSubtitle" class="text-slate-300 text-base sm:text-lg max-w-3xl mx-auto mt-6 leading-relaxed font-light">
+                Descubre la estrecha sincronía entre los vuelos espaciales de la NASA y la exploración hidrotermal abisal de la Marina. Consulta al especialista IA, pon a prueba tu destreza en el simulador o explora los descubrimientos más recientes.
+            </p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 max-w-4xl mx-auto">
+                <div class="glass-card p-5 rounded-2xl text-center">
+                    <i class="fa-solid fa-rocket text-cyan-400 text-2xl mb-2"></i>
+                    <span class="font-display font-bold text-2xl text-white block">Artemis</span>
+                    <span data-i18n="statArtemis" class="text-[11px] text-slate-400 font-mono">Regreso a la Luna</span>
+                </div>
+                <div class="glass-card p-5 rounded-2xl text-center">
+                    <i class="fa-solid fa-anchor text-blue-400 text-2xl mb-2"></i>
+                    <span class="font-display font-bold text-2xl text-white block">US Navy</span>
+                    <span data-i18n="statNavy" class="text-[11px] text-slate-400 font-mono">Investigación Abisal</span>
+                </div>
+                <div class="glass-card p-5 rounded-2xl text-center">
+                    <i class="fa-solid fa-water text-indigo-400 text-2xl mb-2"></i>
+                    <span class="font-display font-bold text-2xl text-white block">10,935 m</span>
+                    <span data-i18n="statDeep" class="text-[11px] text-slate-400 font-mono">Abismo Challenger</span>
+                </div>
+                <div class="glass-card p-5 rounded-2xl text-center">
+                    <i class="fa-solid fa-brain text-purple-400 text-2xl mb-2"></i>
+                    <span class="font-display font-bold text-2xl text-white block">Gemini AI</span>
+                    <span data-i18n="statAI" class="text-[11px] text-slate-400 font-mono">Consultas Multilingües</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Arcade Simulator Section -->
+    <section id="arcade" class="py-16 border-t border-slate-800/80 bg-slate-950/60 relative z-10">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-8">
+                <span data-i18n="arcadeCategory" class="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest">Simulador Interactivo Dual</span>
+                <h2 data-i18n="arcadeTitle" class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">
+                    Misión Espacial y Explorador Abisal
+                </h2>
+                <p data-i18n="arcadeSub" class="text-slate-400 text-sm mt-2">
+                    Controles: Usa <kbd class="px-2 py-0.5 bg-slate-800 rounded text-cyan-300 font-mono text-xs">Espacio</kbd> / <kbd class="px-2 py-0.5 bg-slate-800 rounded text-cyan-300 font-mono text-xs">Flecha arriba</kbd> o haz clic/toca para impulsar el vehículo.
+                </p>
+            </div>
+
+            <div class="glass-panel rounded-3xl p-4 sm:p-6 border border-slate-800 shadow-2xl relative overflow-hidden">
+                
+                <!-- Game Mode Buttons -->
+                <div class="flex flex-wrap justify-center gap-4 mb-6">
+                    <button id="btnModeSpace" onclick="setGameMode('space')" class="px-6 py-3 rounded-2xl font-bold text-sm transition flex items-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/20">
+                        <i class="fa-solid fa-shuttle-space"></i>
+                        <span data-i18n="btnSpaceMode">Misión Espacial (Meteoros)</span>
+                    </button>
+                    <button id="btnModeOcean" onclick="setGameMode('ocean')" class="px-6 py-3 rounded-2xl font-bold text-sm transition flex items-center gap-2 glass-card text-slate-300 hover:text-white">
+                        <i class="fa-solid fa-fish-fins text-cyan-400"></i>
+                        <span data-i18n="btnOceanMode">Exploración Marina (Vida Abisal)</span>
+                    </button>
+                </div>
+
+                <!-- Game Status HUD -->
+                <div class="flex justify-between items-center bg-slate-900/90 px-6 py-3 rounded-t-2xl border-t border-x border-slate-800 text-xs font-mono">
+                    <div class="flex items-center gap-4">
+                        <span id="hudModeLabel" class="text-cyan-400 font-bold flex items-center gap-1.5">
+                            <i class="fa-solid fa-shuttle-space"></i> Artemis Launch
+                        </span>
+                        <span class="text-slate-400"><span data-i18n="hudScore">Puntos</span>: <strong id="hudScoreVal" class="text-white text-sm">0</strong></span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-slate-400"><span data-i18n="hudRecord">Récord</span>: <strong id="hudHighScore" class="text-amber-400 text-sm">0</strong></span>
+                        <span id="hudShield" class="hidden text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-500/40">
+                            <i class="fa-solid fa-shield-halved mr-1"></i> <span data-i18n="hudShieldText">ESCUDO ACTIVO</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Canvas -->
+                <div class="relative w-full aspect-[16/9] bg-slate-950 border-x border-b border-slate-800 rounded-b-2xl overflow-hidden cursor-pointer select-none" id="canvasContainer" onclick="triggerBoost()">
+                    <canvas id="gameCanvas" class="w-full h-full block"></canvas>
+
+                    <!-- Overlay -->
+                    <div id="gameOverlay" class="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20">
+                        <div class="w-16 h-16 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 flex items-center justify-center text-3xl mb-4 animate-bounce">
+                            <i id="overlayIcon" class="fa-solid fa-play"></i>
+                        </div>
+                        <h3 id="overlayTitle" class="font-display font-bold text-2xl sm:text-3xl text-white mb-2">¡Misión Lista!</h3>
+                        <p id="overlaySub" class="text-slate-300 text-sm max-w-md mb-6 leading-relaxed">
+                            Esquiva obstáculos y recolecta esferas de energía para activar escudos de protección.
+                        </p>
+                        <button onclick="startGame()" class="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-extrabold px-8 py-3.5 rounded-xl text-sm transition shadow-lg shadow-cyan-500/30">
+                            <span data-i18n="btnStartGame">Iniciar Misión</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex justify-between items-center text-xs text-slate-400 font-mono">
+                    <span class="hidden sm:inline"><i class="fa-solid fa-keyboard mr-1"></i> [Espacio / Flecha Arriba] para despegar</span>
+                    <span class="sm:hidden"><i class="fa-solid fa-hand-pointer mr-1"></i> Toca el área de juego</span>
+                    <button onclick="togglePause()" class="text-slate-300 hover:text-white underline">
+                        <i class="fa-solid fa-pause mr-1"></i> <span data-i18n="btnPause">Pausar / Reanudar</span>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- AI Specialist Assistant Section -->
+    <section id="chat" class="py-16 border-t border-slate-800/80 bg-slate-950/80 relative z-10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <span class="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-sparkles text-amber-400"></i> <span data-i18n="aiTagline">Asistente Virtual Nexus AI Specialist</span>
+                </span>
+                <h2 data-i18n="aiTitle" class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">
+                    Consulta al Asistente Científico
+                </h2>
+                <p data-i18n="aiSub" class="text-slate-400 text-sm mt-2">
+                    Pregunta sobre las misiones Artemis de la NASA, submarinos y oceanografía militar de la Marina de EE.UU. o biología en la Fosa de las Marianas.
+                </p>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="glass-panel rounded-3xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col h-[540px]">
+                
+                <!-- Chat Header -->
+                <div class="bg-slate-900/90 px-6 py-4 border-b border-slate-800 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 text-slate-950 flex items-center justify-center text-lg font-bold shadow">
+                            <i class="fa-solid fa-brain text-slate-950"></i>
+                        </div>
+                        <div>
+                            <span class="font-display font-bold text-white text-sm block">Nexus AI Specialist</span>
+                            <span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> <span data-i18n="aiStatus">En Línea (Responde en ES | EN | PT)</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="text-xs text-slate-400 font-mono bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/80">
+                        <i class="fa-solid fa-bolt text-cyan-400 mr-1"></i> <span data-i18n="aiModeLabel">IA Incorporada Activa</span>
+                    </div>
+                </div>
+
+                <!-- Chat Messages Scroll Box -->
+                <div id="chatMessages" class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4">
+                    <!-- Default Bot Greeting -->
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-cyan-950 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-xs shrink-0">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div id="chatWelcomeMessage" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 text-xs sm:text-sm text-slate-200 max-w-xl leading-relaxed">
+                            <!-- Injected dynamically based on language -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input Controls -->
+                <div class="p-4 bg-slate-900/90 border-t border-slate-800">
+                    <div class="flex items-center gap-2 overflow-x-auto pb-2 mb-2 no-scrollbar text-[11px]">
+                        <span data-i18n="chatSuggestions" class="text-slate-500 font-mono whitespace-nowrap">Sugerencias:</span>
+                        <button onclick="sendQuickPrompt('navy_nasa')" data-i18n="prompt1" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-full whitespace-nowrap transition border border-slate-700">
+                            ⚓ NASA y la Marina
+                        </button>
+                        <button onclick="sendQuickPrompt('mariana')" data-i18n="prompt2" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-full whitespace-nowrap transition border border-slate-700">
+                            🐙 Fosa de las Marianas
+                        </button>
+                        <button onclick="sendQuickPrompt('artemis')" data-i18n="prompt3" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-full whitespace-nowrap transition border border-slate-700">
+                            🚀 Misión Artemis II
+                        </button>
+                    </div>
+
+                    <form id="chatForm" onsubmit="handleChatSubmit(event)" class="flex gap-2">
+                        <input type="text" id="chatInput" placeholder="Haz una pregunta científica..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-400 placeholder-slate-500" required />
+                        <button type="submit" id="btnSendChat" class="bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition flex items-center gap-1.5 shrink-0">
+                            <span data-i18n="btnSend">Enviar</span>
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Interactive Knowledge Base (Accordion) -->
+    <section id="accordion" class="py-16 border-t border-slate-800/80 relative z-10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span data-i18n="knowledgeCategory" class="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest">Compendio Científico</span>
+                <h2 data-i18n="knowledgeTitle" class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">
+                    Explicaciones Detalladas
+                </h2>
+                <p data-i18n="knowledgeSub" class="text-slate-400 text-sm mt-2">
+                    Haz clic en los módulos para desplegar análisis profundos sobre temas clave.
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Item 1 -->
+                <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+                    <button onclick="toggleAccordion(1)" class="w-full p-5 text-left flex justify-between items-center bg-slate-900/60 hover:bg-slate-800/60 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-anchor text-cyan-400 text-lg"></i>
+                            <span data-i18n="accTitle1" class="font-display font-bold text-white text-base sm:text-lg">¿Por qué la NASA trabaja estrechamente con la Marina de EE.UU.?</span>
+                        </div>
+                        <i id="accIcon1" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="accBody1" class="hidden p-5 border-t border-slate-800 text-xs sm:text-sm text-slate-300 leading-relaxed space-y-2">
+                        <p data-i18n="accBody1_1">La colaboración entre la NASA y la Marina (US Navy) inició en los albores de la era espacial con los programas Mercury, Gemini y Apollo. Dado que las naves espaciales estadounidenses realizan su acuatizaje en el océano Pacífico o Atlántico, la Marina provee portaaviones, helicópteros, buzos de élite (Navy SEALs y buzos de rescate) para recuperar sanos y salvos a los astronautas y las cápsulas.</p>
+                        <p data-i18n="accBody1_2">Además, los astronautas realizan sus entrenamientos de flotabilidad neutra en el Laboratorio de Flotabilidad Neutra (NBL) de la NASA, donde las metodologías de buceo profundo militar garantizan la simulación exacta de caminatas espaciales y lunares en gravedad reducida.</p>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+                    <button onclick="toggleAccordion(2)" class="w-full p-5 text-left flex justify-between items-center bg-slate-900/60 hover:bg-slate-800/60 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-water text-indigo-400 text-lg"></i>
+                            <span data-i18n="accTitle2" class="font-display font-bold text-white text-base sm:text-lg">Condiciones Extremas: Fosa de las Marianas y la Zona Hadal</span>
+                        </div>
+                        <i id="accIcon2" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="accBody2" class="hidden p-5 border-t border-slate-800 text-xs sm:text-sm text-slate-300 leading-relaxed space-y-2">
+                        <p data-i18n="accBody2_1">La Fosa de las Marianas alcanza una profundidad máxima de casi 11,000 metros en el Abismo Challenger. La presión en el fondo supera las 1,086 atmósferas (más de 1.1 toneladas por centímetro cuadrado), lo que equivale a aplastar un automóvil con el peso de cientos de elefantes.</p>
+                        <p data-i18n="accBody2_2">A pesar de la oscuridad total y temperaturas cercanas al congelamiento (1-4 °C), existe vida próspera compuesta por anfípodos gigantes, peces caracol de las Marianas y bacterias piezófilas extremófilas que metabolizan metano e hidrógeno hidrotermal.</p>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+                    <button onclick="toggleAccordion(3)" class="w-full p-5 text-left flex justify-between items-center bg-slate-900/60 hover:bg-slate-800/60 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-rocket text-rose-400 text-lg"></i>
+                            <span data-i18n="accTitle3" class="font-display font-bold text-white text-base sm:text-lg">El Programa Artemis: La Nueva Era de Exploración Lunar</span>
+                        </div>
+                        <i id="accIcon3" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="accBody3" class="hidden p-5 border-t border-slate-800 text-xs sm:text-sm text-slate-300 leading-relaxed space-y-2">
+                        <p data-i18n="accBody3_1">El programa Artemis liderado por la NASA busca establecer una presencia humana sostenible en y alrededor de la Luna. Con la nave espacial Orión y el megacohete SLS, Artemis allanará el camino para enviar a la primera mujer y a la primera persona de color a la superficie lunar.</p>
+                        <p data-i18n="accBody3_2">Las lecciones aprendidas en el Polo Sur lunar, rico en hielo de agua, servirán como trampolín tecnológico imprescindible para la futura exploración tripulada hacia Marte.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline 2020 - 2026 -->
+    <section id="timeline" class="py-16 border-t border-slate-800/80 bg-slate-950/40 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span data-i18n="timelineCategory" class="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest">Cronología de Descubrimientos</span>
+                <h2 data-i18n="timelineTitle" class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">
+                    Hitos Científicos Recientes (2020 - 2026)
+                </h2>
+                <p data-i18n="timelineSub" class="text-slate-400 text-sm mt-3">
+                    Grandes avances e innovaciones de la ciencia del espacio y la oceanografía abisal.
+                </p>
+            </div>
+
+            <div class="space-y-6 max-w-4xl mx-auto">
+                <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-l-4 border-l-cyan-500">
+                    <div class="space-y-1">
+                        <span class="text-xs font-mono font-bold text-cyan-400">2020 - Oceanografía Hadal</span>
+                        <h4 data-i18n="timelineItem1Title" class="font-display font-bold text-lg text-white">Mapeo de Alta Precisión del Abismo Challenger</h4>
+                        <p data-i18n="timelineItem1Desc" class="text-slate-300 text-xs sm:text-sm">Expediciones con el sumergible Limiting Factor confirman profundidades de 10,935 m y catalogan microorganismos adaptados a presiones monumentales.</p>
+                    </div>
+                    <span class="px-3 py-1 bg-cyan-950 text-cyan-300 text-xs font-mono rounded-lg border border-cyan-800 shrink-0">Océano</span>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-l-4 border-l-indigo-500">
+                    <div class="space-y-1">
+                        <span class="text-xs font-mono font-bold text-indigo-400">2021 - Exploración Marcial</span>
+                        <h4 data-i18n="timelineItem2Title" class="font-display font-bold text-lg text-white">Rover Perseverance e Ingenuity en Marte</h4>
+                        <p data-i18n="timelineItem2Desc" class="text-slate-300 text-xs sm:text-sm">Perseverance aterriza en el Cráter Jezero mientras el helicóptero Ingenuity realiza el primer vuelo propulsado en otro planeta.</p>
+                    </div>
+                    <span class="px-3 py-1 bg-indigo-950 text-indigo-300 text-xs font-mono rounded-lg border border-indigo-800 shrink-0">Espacio</span>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-l-4 border-l-amber-500">
+                    <div class="space-y-1">
+                        <span class="text-xs font-mono font-bold text-amber-400">2022 - Misiones Artemis & JWST</span>
+                        <h4 data-i18n="timelineItem3Title" class="font-display font-bold text-lg text-white">Prueba Artemis I & Telescopio James Webb</h4>
+                        <p data-i18n="timelineItem3Desc" class="text-slate-300 text-xs sm:text-sm">La NASA valida con éxito la nave Orión en órbita lunar mientras el JWST comienza a transmitir las imágenes más profundas del infrarrojo.</p>
+                    </div>
+                    <span class="px-3 py-1 bg-amber-950 text-amber-300 text-xs font-mono rounded-lg border border-amber-800 shrink-0">Artemis</span>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-l-4 border-l-emerald-500">
+                    <div class="space-y-1">
+                        <span class="text-xs font-mono font-bold text-emerald-400">2024 - Biología Submarina</span>
+                        <h4 data-i18n="timelineItem4Title" class="font-display font-bold text-lg text-white">Descubrimiento de Montes y Especies Abisales</h4>
+                        <p data-i18n="timelineItem4Desc" class="text-slate-300 text-xs sm:text-sm">Mapeos del Schmidt Ocean Institute documentan cordilleras submarinas prístinas con más de 100 especies de corales y fauna marina desconocidas.</p>
+                    </div>
+                    <span class="px-3 py-1 bg-emerald-950 text-emerald-300 text-xs font-mono rounded-lg border border-emerald-800 shrink-0">NOAA / Schmidt</span>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-l-4 border-l-rose-500">
+                    <div class="space-y-1">
+                        <span class="text-xs font-mono font-bold text-rose-400">2025 - 2026 - Misiones en Marcha</span>
+                        <h4 data-i18n="timelineItem5Title" class="font-display font-bold text-lg text-white">Preparativos de Artemis II y Robótica Submarina con IA</h4>
+                        <p data-i18n="timelineItem5Desc" class="text-slate-300 text-xs sm:text-sm">Entrenamiento de la tripulación de Artemis II para circunvalar la Luna y despliegue de vehículos submarinos autónomos para monitorear ecosistemas profundos.</p>
+                    </div>
+                    <span class="px-3 py-1 bg-rose-950 text-rose-300 text-xs font-mono rounded-lg border border-rose-800 shrink-0">Actualidad</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Ratings & Reviews System ("Improve Nexus") -->
+    <section id="reviews" class="py-16 border-t border-slate-800/80 bg-slate-950/70 relative z-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Banner Notification -->
+            <div class="bg-gradient-to-r from-cyan-950 via-slate-900 to-indigo-950 border border-cyan-500/40 rounded-2xl p-4 text-center mb-12 shadow-xl">
+                <p data-i18n="reviewsNoticeBanner" class="text-cyan-300 font-mono text-xs sm:text-sm font-semibold flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-circle-info text-cyan-400 text-base"></i>
+                    Estos comentarios se utilizarán para mejorar Nexus.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Left Column: Overall Rating Score Box & Form -->
+                <div class="lg:col-span-5 space-y-6">
+                    
+                    <!-- Score Card -->
+                    <div class="glass-panel rounded-3xl p-6 border border-slate-800 text-center">
+                        <span data-i18n="reviewScoreTitle" class="text-xs font-mono text-slate-400 uppercase tracking-widest block mb-2">Puntuación Promedio</span>
+                        <div class="flex justify-center items-baseline gap-2 mb-2">
+                            <span id="avgScoreDisplay" class="font-display font-extrabold text-5xl text-white">4.9</span>
+                            <span class="text-slate-400 text-xl font-bold">/ 5.0</span>
+                        </div>
+                        <div id="avgStarsContainer" class="flex justify-center text-amber-400 gap-1 text-lg mb-3">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <span class="text-xs text-slate-400 font-mono block"><span id="totalReviewsCount">12</span> <span data-i18n="reviewTotalCountLabel">reseñas registradas</span></span>
+                    </div>
+
+                    <!-- Submission Form Card -->
+                    <div class="glass-panel rounded-3xl p-6 border border-slate-800">
+                        <h3 data-i18n="reviewFormTitle" class="font-display font-bold text-xl text-white mb-2">Deja tu Calificación</h3>
+                        <p data-i18n="reviewFormSub" class="text-xs text-slate-400 mb-6">Tu opinión nos ayuda a perfeccionar la plataforma Nexus Ciencia.</p>
+
+                        <form id="reviewForm" onsubmit="handleReviewSubmit(event)" class="space-y-4">
+                            <div>
+                                <label data-i18n="labelName" class="block text-xs font-mono text-slate-300 uppercase mb-1">Nombre Completo</label>
+                                <input type="text" id="reviewerName" placeholder="Ej. Dra. Elena Rostova" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400" required />
+                            </div>
+
+                            <div>
+                                <label data-i18n="labelRating" class="block text-xs font-mono text-slate-300 uppercase mb-1">Calificación (0 a 5 estrellas)</label>
+                                <div class="flex items-center gap-2">
+                                    <div id="starPicker" class="flex text-2xl text-slate-600 cursor-pointer gap-1">
+                                        <i class="fa-solid fa-star" onclick="setFormRating(1)" onmouseover="hoverFormRating(1)" onmouseout="resetFormRating()"></i>
+                                        <i class="fa-solid fa-star" onclick="setFormRating(2)" onmouseover="hoverFormRating(2)" onmouseout="resetFormRating()"></i>
+                                        <i class="fa-solid fa-star" onclick="setFormRating(3)" onmouseover="hoverFormRating(3)" onmouseout="resetFormRating()"></i>
+                                        <i class="fa-solid fa-star" onclick="setFormRating(4)" onmouseover="hoverFormRating(4)" onmouseout="resetFormRating()"></i>
+                                        <i class="fa-solid fa-star" onclick="setFormRating(5)" onmouseover="hoverFormRating(5)" onmouseout="resetFormRating()"></i>
+                                    </div>
+                                    <span id="ratingValLabel" class="text-xs font-mono font-bold text-amber-400 ml-2">5.0 / 5.0</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label data-i18n="labelComment" class="block text-xs font-mono text-slate-300 uppercase mb-1">Comentario u Observación</label>
+                                <textarea id="reviewerComment" rows="3" placeholder="Escribe tus comentarios para mejorar el sistema..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-cyan-400 resize-none" required></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 text-slate-950 font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition shadow-lg shadow-cyan-500/20">
+                                <span data-i18n="btnSubmitReview">Enviar Opinión</span>
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+                <!-- Right Column: User Reviews Feed -->
+                <div class="lg:col-span-7">
+                    <div class="glass-panel rounded-3xl p-6 border border-slate-800 h-full flex flex-col">
+                        <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+                            <h3 data-i18n="reviewFeedTitle" class="font-display font-bold text-lg text-white">Comentarios de la Comunidad</h3>
+                            <span class="text-xs font-mono text-cyan-400 bg-cyan-950/80 px-2.5 py-1 rounded-full border border-cyan-800" data-i18n="reviewFeedBadge">Actualizado en Vivo</span>
+                        </div>
+
+                        <!-- Scrollable Feed -->
+                        <div id="reviewsFeed" class="space-y-4 flex-1 overflow-y-auto max-h-[580px] pr-2">
+                            <!-- Injected dynamically via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Official Sources Grid -->
+    <section id="sources" class="py-16 border-t border-slate-800/80 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span data-i18n="sourcesCategory" class="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest">Fuentes Oficiales de Investigación</span>
+                <h2 data-i18n="sourcesTitle" class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">
+                    Portales Científicos Institucionales
+                </h2>
+                <p data-i18n="sourcesSub" class="text-slate-400 text-sm mt-2">
+                    Accede directamente a las bases de datos gubernamentales e investigaciones en tiempo real.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="https://www.nasa.gov" target="_blank" rel="noopener noreferrer" class="glass-card p-5 rounded-2xl text-center group">
+                    <i class="fa-solid fa-rocket text-cyan-400 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-display font-bold text-white text-sm">NASA Official</h4>
+                    <span class="text-[11px] text-slate-400 font-mono block mt-1">nasa.gov</span>
+                </a>
+
+                <a href="https://www.navy.mil" target="_blank" rel="noopener noreferrer" class="glass-card p-5 rounded-2xl text-center group">
+                    <i class="fa-solid fa-anchor text-blue-400 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-display font-bold text-white text-sm">US Navy Research</h4>
+                    <span class="text-[11px] text-slate-400 font-mono block mt-1">navy.mil</span>
+                </a>
+
+                <a href="https://www.noaa.gov" target="_blank" rel="noopener noreferrer" class="glass-card p-5 rounded-2xl text-center group">
+                    <i class="fa-solid fa-water text-indigo-400 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-display font-bold text-white text-sm">NOAA Ocean Exploration</h4>
+                    <span class="text-[11px] text-slate-400 font-mono block mt-1">noaa.gov</span>
+                </a>
+
+                <a href="https://schmidtocean.org" target="_blank" rel="noopener noreferrer" class="glass-card p-5 rounded-2xl text-center group">
+                    <i class="fa-solid fa-ship text-emerald-400 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-display font-bold text-white text-sm">Schmidt Ocean Institute</h4>
+                    <span class="text-[11px] text-slate-400 font-mono block mt-1">schmidtocean.org</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 border-t border-slate-800/80 text-center text-xs text-slate-500 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <span class="font-display font-bold text-slate-400 text-sm">Nexus Ciencia &copy; 2026</span>
+            <span data-i18n="footerSub" class="text-slate-400">Plataforma educativa de exploración espacial profunda y oceanografía abisal.</span>
+        </div>
+    </footer>
+
+    <script>
+        /* ============================================================
+           1. MULTI-LANGUAGE DICTIONARY & LOCALIZATION ENGINE
+           ============================================================ */
+        let currentLang = 'es';
+
+        const i18n = {
+            es: {
+                navSubtitle: "Espacio & Océano Profundo",
+                navHome: "Inicio",
+                navArcade: "Arcade",
+                navAI: "Asistente IA",
+                navExplanations: "Conocimiento",
+                navTimeline: "Cronología",
+                navReviews: "Reseñas",
+                navSources: "Fuentes",
+                btnAskAI: "Preguntar IA",
+                
+                heroBadge: "PLATAFORMA CIENTÍFICA INTEGRAL & ASISTENTE IA EN VIVO",
+                heroTitle1: "Explorando las Fronteras de la",
+                heroTitle2: "Naturaleza Extremas",
+                heroSubtitle: "Descubre la estrecha sincronía entre los vuelos espaciales de la NASA y la exploración hidrotermal abisal de la Marina. Consulta al especialista IA, pon a prueba tu destreza en el simulador o explora los descubrimientos más recientes.",
+                
+                statArtemis: "Regreso a la Luna",
+                statNavy: "Investigación Abisal",
+                statDeep: "Abismo Challenger",
+                statAI: "Consultas Multilingües",
+
+                arcadeCategory: "Simulador Interactivo Dual",
+                arcadeTitle: "Misión Espacial y Explorador Abisal",
+                arcadeSub: "Controles: Usa Espacio / Flecha arriba o haz clic/toca para impulsar el vehículo.",
+                btnSpaceMode: "Misión Espacial (Meteoros)",
+                btnOceanMode: "Exploración Marina (Vida Abisal)",
+                hudScore: "Puntos",
+                hudRecord: "Récord",
+                hudShieldText: "ESCUDO ACTIVO",
+                btnStartGame: "Iniciar Misión",
+                btnPause: "Pausar / Reanudar",
+
+                aiTagline: "Asistente Virtual Nexus AI Specialist",
+                aiTitle: "Consulta al Asistente Científico",
+                aiSub: "Pregunta sobre las misiones Artemis de la NASA, submarinos y oceanografía militar de la Marina de EE.UU. o biología en la Fosa de las Marianas.",
+                aiStatus: "En Línea (Responde en ES | EN | PT)",
+                aiModeLabel: "IA Incorporada Activa",
+                chatWelcome: "👋 ¡Hola! Soy el especialista virtual de Nexus Ciencia. Puedo orientarte sobre los descubrimientos de la NASA, el rol de la Marina de EE.UU. en misiones espaciales y la vida abisal en la Fosa de las Marianas. ¿Qué deseas explorar?",
+                chatSuggestions: "Sugerencias:",
+                prompt1: "⚓ NASA y la Marina",
+                prompt2: "🐙 Fosa de las Marianas",
+                prompt3: "🚀 Misión Artemis II",
+                btnSend: "Enviar",
+
+                knowledgeCategory: "Compendio Científico",
+                knowledgeTitle: "Explicaciones Detalladas",
+                knowledgeSub: "Haz clic en los módulos para desplegar análisis profundos sobre temas clave.",
+                accTitle1: "¿Por qué la NASA trabaja estrechamente con la Marina de EE.UU.?",
+                accBody1_1: "La colaboración entre la NASA y la Marina (US Navy) inició en los albores de la era espacial con los programas Mercury, Gemini y Apollo. Dado que las naves espaciales estadounidenses realizan su acuatizaje en el océano Pacífico o Atlántico, la Marina provee portaaviones, helicópteros, buzos de élite (Navy SEALs y buzos de rescate) para recuperar sanos y salvos a los astronautas y las cápsulas.",
+                accBody1_2: "Además, los astronautas realizan sus entrenamientos de flotabilidad neutra en el Laboratorio de Flotabilidad Neutra (NBL) de la NASA, donde las metodologías de buceo profundo militar garantizan la simulación exacta de caminatas espaciales y lunares en gravedad reducida.",
+                
+                accTitle2: "Condiciones Extremas: Fosa de las Marianas y la Zona Hadal",
+                accBody2_1: "La Fosa de las Marianas alcanza una profundidad máxima de casi 11,000 metros en el Abismo Challenger. La presión en el fondo supera las 1,086 atmósferas (más de 1.1 toneladas por centímetro cuadrado), lo que equivale a aplastar un automóvil con el peso de cientos de elefantes.",
+                accBody2_2: "A pesar de la oscuridad total y temperaturas cercanas al congelamiento (1-4 °C), existe vida próspera compuesta por anfípodos gigantes, peces caracol de las Marianas y bacterias piezófilas extremófilas que metabolizan metano e hidrógeno hidrotermal.",
+
+                accTitle3: "El Programa Artemis: La Nueva Era de Exploración Lunar",
+                accBody3_1: "El programa Artemis liderado por la NASA busca establecer una presencia humana sostenible en y alrededor de la Luna. Con la nave espacial Orión y el megacohete SLS, Artemis allanará el camino para enviar a la primera mujer y a la primera persona de color a la superficie lunar.",
+                accBody3_2: "Las lecciones aprendidas en el Polo Sur lunar, rico en hielo de agua, servirán como trampolín tecnológico imprescindible para la futura exploración tripulada hacia Marte.",
+
+                timelineCategory: "Cronología de Descubrimientos",
+                timelineTitle: "Hitos Científicos Recientes (2020 - 2026)",
+                timelineSub: "Grandes avances e innovaciones de la ciencia del espacio y la oceanografía abisal.",
+                timelineItem1Title: "Mapeo de Alta Precisión del Abismo Challenger",
+                timelineItem1Desc: "Expediciones con el sumergible Limiting Factor confirman profundidades de 10,935 m y catalogan microorganismos adaptados a presiones monumentales.",
+                timelineItem2Title: "Rover Perseverance e Ingenuity en Marte",
+                timelineItem2Desc: "Perseverance aterriza en el Cráter Jezero mientras el helicóptero Ingenuity realiza el primer vuelo propulsado en otro planeta.",
+                timelineItem3Title: "Prueba Artemis I & Telescopio James Webb",
+                timelineItem3Desc: "La NASA valida con éxito la nave Orión en órbita lunar mientras el JWST comienza a transmitir las imágenes más profundas del infrarrojo.",
+                timelineItem4Title: "Descubrimiento de Montes y Especies Abisales",
+                timelineItem4Desc: "Mapeos del Schmidt Ocean Institute documentan cordilleras submarinas prístinas con más de 100 especies de corales y fauna marina desconocidas.",
+                timelineItem5Title: "Preparativos de Artemis II y Robótica Submarina con IA",
+                timelineItem5Desc: "Entrenamiento de la tripulación de Artemis II para circunvalar la Luna y despliegue de vehículos submarinos autónomos para monitorear ecosistemas profundos.",
+
+                reviewsNoticeBanner: "Estos comentarios se utilizarán para mejorar Nexus.",
+                reviewScoreTitle: "Puntuación Promedio",
+                reviewTotalCountLabel: "reseñas registradas",
+                reviewFormTitle: "Deja tu Calificación",
+                reviewFormSub: "Tu opinión nos ayuda a perfeccionar la plataforma Nexus Ciencia.",
+                labelName: "Nombre Completo",
+                labelRating: "Calificación (0 a 5 estrellas)",
+                labelComment: "Comentario u Observación",
+                btnSubmitReview: "Enviar Opinión",
+                reviewFeedTitle: "Comentarios de la Comunidad",
+                reviewFeedBadge: "Actualizado en Vivo",
+
+                sourcesCategory: "Fuentes Oficiales de Investigación",
+                sourcesTitle: "Portales Científicos Institucionales",
+                sourcesSub: "Accede directamente a las bases de datos gubernamentales e investigaciones en tiempo real.",
+                footerSub: "Plataforma educativa de exploración espacial profunda y oceanografía abisal."
+            },
+            en: {
+                navSubtitle: "Space & Deep Ocean",
+                navHome: "Home",
+                navArcade: "Arcade",
+                navAI: "AI Assistant",
+                navExplanations: "Knowledge",
+                navTimeline: "Timeline",
+                navReviews: "Reviews",
+                navSources: "Sources",
+                btnAskAI: "Ask AI",
+
+                heroBadge: "INTEGRATED SCIENCE PLATFORM & LIVE AI ASSISTANT",
+                heroTitle1: "Exploring the Frontiers of",
+                heroTitle2: "Extreme Nature",
+                heroSubtitle: "Discover the deep synergy between NASA spaceflight operations and US Navy deep-sea abyssal research. Consult our AI specialist, test your skills in the arcade simulator, or explore recent breakthroughs.",
+                
+                statArtemis: "Return to the Moon",
+                statNavy: "Abyssal Exploration",
+                statDeep: "Challenger Deep",
+                statAI: "Multilingual AI",
+
+                arcadeCategory: "Dual Interactive Simulator",
+                arcadeTitle: "Space Mission & Abyssal Explorer",
+                arcadeSub: "Controls: Use Spacebar / Up Arrow or tap/click to thrust the vehicle.",
+                btnSpaceMode: "Space Mission (Meteors)",
+                btnOceanMode: "Marine Exploration (Abyssal Life)",
+                hudScore: "Score",
+                hudRecord: "High Score",
+                hudShieldText: "SHIELD ACTIVE",
+                btnStartGame: "Start Mission",
+                btnPause: "Pause / Resume",
+
+                aiTagline: "Nexus Virtual AI Specialist",
+                aiTitle: "Consult the Science Assistant",
+                aiSub: "Ask any question regarding NASA Artemis missions, US Navy submarine oceanography, or Mariana Trench biology.",
+                aiStatus: "Online (Responds in ES | EN | PT)",
+                aiModeLabel: "Embedded AI Active",
+                chatWelcome: "👋 Hello! I am the Nexus Science virtual specialist. I can assist you with NASA space discoveries, the US Navy's role in astronaut recovery, or abyssal biology in the Mariana Trench. What would you like to explore?",
+                chatSuggestions: "Suggestions:",
+                prompt1: "⚓ NASA & US Navy",
+                prompt2: "🐙 Mariana Trench",
+                prompt3: "🚀 Artemis II Mission",
+                btnSend: "Send",
+
+                knowledgeCategory: "Scientific Compendium",
+                knowledgeTitle: "Detailed Explanations",
+                knowledgeSub: "Click on the modules below to expand in-depth analysis on key topics.",
+                accTitle1: "Why does NASA work closely with the US Navy?",
+                accBody1_1: "Collaboration between NASA and the US Navy began at the dawn of the space age during Mercury, Gemini, and Apollo. Because US spacecraft splash down in the ocean, the Navy provides aircraft carriers, helicopters, and elite Navy SEAL divers to safely recover astronauts and capsules.",
+                accBody1_2: "In addition, astronauts train in neutral buoyancy at NASA's NBL facility, where military deep-sea diving protocols ensure precise simulations of spacewalks and lunar EVAs under reduced gravity.",
+
+                accTitle2: "Extreme Conditions: The Mariana Trench & Hadal Zone",
+                accBody2_1: "The Mariana Trench reaches a maximum depth of nearly 11,000 meters at Challenger Deep. Pressure at the bottom exceeds 1,086 atmospheres (over 8 tons per square inch), equivalent to crushing a car under hundreds of elephants.",
+                accBody2_2: "Despite total darkness and near-freezing temperatures (1-4 °C), vibrant life thrives including supergiant amphipods, Mariana snailfish, and piezophilic extremophile bacteria metabolizing hydrothermal vents.",
+
+                accTitle3: "The Artemis Program: A New Era of Lunar Exploration",
+                accBody3_1: "NASA's Artemis program aims to establish a sustainable human presence on and around the Moon. Utilizing the Orion spacecraft and SLS rocket, Artemis will land the first woman and first person of color on the lunar surface.",
+                accBody3_2: "Lessons learned at the water-ice rich Lunar South Pole will serve as a vital technological stepping stone for future crewed missions to Mars.",
+
+                timelineCategory: "Discovery Timeline",
+                timelineTitle: "Recent Scientific Milestones (2020 - 2026)",
+                timelineSub: "Major breakthroughs in space exploration and deep oceanography.",
+                timelineItem1Title: "High-Precision Mapping of Challenger Deep",
+                timelineItem1Desc: "Deep-sea expeditions with the Limiting Factor submersible confirm depths of 10,935 m and catalog piezophilic extremophiles.",
+                timelineItem2Title: "Perseverance Rover & Ingenuity on Mars",
+                timelineItem2Desc: "Perseverance lands in Jezero Crater while the Ingenuity helicopter achieves the first powered flight on another planet.",
+                timelineItem3Title: "Artemis I Flight Test & James Webb Telescope",
+                timelineItem3Desc: "NASA successfully validates Orion in lunar orbit while JWST delivers the deepest infrared views of the universe.",
+                timelineItem4Title: "Discovery of Seamounts and Abyssal Species",
+                timelineItem4Desc: "Schmidt Ocean Institute mapping surveys document untouched underwater mountain ranges with over 100 new marine species.",
+                timelineItem5Title: "Artemis II Preparations & AI Subsea Robotics",
+                timelineItem5Desc: "Artemis II crew training for lunar flybys alongside deployment of autonomous AI underwater drones monitoring deep ecosystems.",
+
+                reviewsNoticeBanner: "These comments will be used to improve Nexus.",
+                reviewScoreTitle: "Average Rating Score",
+                reviewTotalCountLabel: "reviews recorded",
+                reviewFormTitle: "Leave Your Feedback",
+                reviewFormSub: "Your input helps us continuously refine the Nexus Ciencia platform.",
+                labelName: "Full Name",
+                labelRating: "Rating (0 to 5 stars)",
+                labelComment: "Comment or Observation",
+                btnSubmitReview: "Submit Feedback",
+                reviewFeedTitle: "Community Feedback",
+                reviewFeedBadge: "Updated Live",
+
+                sourcesCategory: "Official Research Sources",
+                sourcesTitle: "Institutional Science Portals",
+                sourcesSub: "Access official government databases and real-time research feeds directly.",
+                footerSub: "Educational platform for deep space exploration and abyssal oceanography."
+            },
+            pt: {
+                navSubtitle: "Espaço & Oceano Profundo",
+                navHome: "Início",
+                navArcade: "Arcade",
+                navAI: "Assistente IA",
+                navExplanations: "Conhecimento",
+                navTimeline: "Cronologia",
+                navReviews: "Avaliações",
+                navSources: "Fontes",
+                btnAskAI: "Perguntar IA",
+
+                heroBadge: "PLATAFORMA CIENTÍFICA INTEGRAL & ASSISTENTE IA AO VIVO",
+                heroTitle1: "Explorando as Fronteiras da",
+                heroTitle2: "Natureza Extrema",
+                heroSubtitle: "Descubra a profunda sinergia entre as missões espaciais da NASA e a pesquisa abissal hidrotermal da Marinha dos EUA. Consulte nosso especialista IA, jogue no simulador ou explore descobertas recentes.",
+                
+                statArtemis: "Retorno à Lua",
+                statNavy: "Pesquisa Abissal",
+                statDeep: "Depressão Challenger",
+                statAI: "IA Multilíngue",
+
+                arcadeCategory: "Simulador Interativo Duplo",
+                arcadeTitle: "Missão Espacial e Explorador Abissal",
+                arcadeSub: "Controles: Use Barra de Espaço / Seta para Cima ou toque para impulsionar a nave.",
+                btnSpaceMode: "Missão Espacial (Meteoros)",
+                btnOceanMode: "Exploração Marinha (Vida Abissal)",
+                hudScore: "Pontos",
+                hudRecord: "Recorde",
+                hudShieldText: "ESCUDO ATIVO",
+                btnStartGame: "Iniciar Missão",
+                btnPause: "Pausar / Retomar",
+
+                aiTagline: "Especialista Virtual Nexus AI",
+                aiTitle: "Consulte o Assistente Científico",
+                aiSub: "Faça perguntas sobre as missões Artemis da NASA, oceanografia de submarinos da Marinha dos EUA ou biologia na Fossa das Marianas.",
+                aiStatus: "Online (Responde em ES | EN | PT)",
+                aiModeLabel: "IA Integrada Ativa",
+                chatWelcome: "👋 Olá! Sou o especialista virtual do Nexus Ciencia. Posso ajudá-lo com descobertas da NASA, o papel da Marinha dos EUA e a vida abissal na Fossa das Marianas. O que gostaria de explorar?",
+                chatSuggestions: "Sugestões:",
+                prompt1: "⚓ NASA e Marinha",
+                prompt2: "🐙 Fossa das Marianas",
+                prompt3: "🚀 Missão Artemis II",
+                btnSend: "Enviar",
+
+                knowledgeCategory: "Compêndio Científico",
+                knowledgeTitle: "Explicações Detalhadas",
+                knowledgeSub: "Clique nos módulos abaixo para expandir análises profundas sobre temas-chave.",
+                accTitle1: "Por que a NASA trabalha em estreita colaboração com a Marinha dos EUA?",
+                accBody1_1: "A colaboração entre a NASA e a Marinha começou no início da era espacial nas missões Mercury, Gemini e Apollo. Como as cápsulas pousam no oceano, a Marinha fornece porta-aviões, helicópteros e mergulhadores de elite para resgatar os astronautas.",
+                accBody1_2: "Além disso, os astronautas treinam no Laboratório de Flutuabilidade Neutra (NBL) da NASA, onde técnicas de mergulho militar simulam caminhadas espaciais em gravidade reduzida.",
+
+                accTitle2: "Condições Extremas: A Fossa das Marianas e a Zona Hadal",
+                accBody2_1: "A Fossa das Marianas atinge quase 11.000 metros de profundidade na Depressão Challenger. A pressão no fundo excede 1.086 atmosferas (mais de 1,1 tonelada por centímetro quadrado).",
+                accBody2_2: "Apesar da escuridão total e temperaturas próximas de congelamento (1-4 °C), existe vida próspera composta por anfípodes gigantes, peixes-caracol e bactérias extremófilas.",
+
+                accTitle3: "O Programa Artemis: Uma Nova Era de Exploração Lunar",
+                accBody3_1: "O programa Artemis liderado pela NASA visa estabelecer uma presença humana sustentável na Lua. Com a nave Orion e o foguete SLS, Artemis levará a primeira mulher e a primeira pessoa de cor à superfície lunar.",
+                accBody3_2: "As lições aprendidas no Pólo Sul lunar servirão como um trampolim tecnológico essencial para futuras missões tripuladas a Marte.",
+
+                timelineCategory: "Cronologia de Descobertas",
+                timelineTitle: "Marcos Científicos Recentes (2020 - 2026)",
+                timelineSub: "Grandes avanços na exploração espacial e oceanografia abissal.",
+                timelineItem1Title: "Mapeamento de Alta Precisão da Depressão Challenger",
+                timelineItem1Desc: "Expedições com o submersível Limiting Factor confirmam profundidades de 10.935 m e catalogam extremófilos.",
+                timelineItem2Title: "Rover Perseverance e Ingenuity em Marte",
+                timelineItem2Desc: "Perseverance pousa na Cratera Jezero enquanto o helicóptero Ingenuity realiza o primeiro voo propulsado em outro planeta.",
+                timelineItem3Title: "Teste Artemis I & Telescópio James Webb",
+                timelineItem3Desc: "A NASA valida com sucesso a nave Orion na órbita lunar enquanto o JWST transmite imagens do universo profundo.",
+                timelineItem4Title: "Descoberta de Montes Submarinos e Espécies Abissais",
+                timelineItem4Desc: "Mapeamentos do Schmidt Ocean Institute documentam cordilheiras submarinas virgens com mais de 100 novas espécies marinhas.",
+                timelineItem5Title: "Preparativos da Artemis II e Robótica Submarina com IA",
+                timelineItem5Desc: "Treinamento da tripulação da Artemis II para sobrevoar a Lua e implantação de drones submarinos autônomos com IA.",
+
+                reviewsNoticeBanner: "Estes comentários serão usados para melhorar o Nexus.",
+                reviewScoreTitle: "Pontuação Média",
+                reviewTotalCountLabel: "avaliações registradas",
+                reviewFormTitle: "Deixe sua Avaliação",
+                reviewFormSub: "Sua opinião nos ajuda a aprimorar a plataforma Nexus Ciencia.",
+                labelName: "Nome Completo",
+                labelRating: "Avaliação (0 a 5 estrelas)",
+                labelComment: "Comentário ou Observação",
+                btnSubmitReview: "Enviar Avaliação",
+                reviewFeedTitle: "Comentários da Comunidade",
+                reviewFeedBadge: "Atualizado ao Vivo",
+
+                sourcesCategory: "Fontes Oficiais de Pesquisa",
+                sourcesTitle: "Portais Científicos Institucionais",
+                sourcesSub: "Acesse bancos de dados governamentais e pesquisas em tempo real diretamente.",
+                footerSub: "Plataforma educacional para exploração espacial e oceanografia abissal."
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            
+            // Toggle active button style
+            ['es', 'en', 'pt'].forEach(l => {
+                const btn = document.getElementById(`lang-${l}`);
+                if (l === lang) {
+                    btn.className = "px-2.5 py-1 rounded-lg transition bg-cyan-400 text-slate-950 font-bold shadow";
+                } else {
+                    btn.className = "px-2.5 py-1 rounded-lg transition text-slate-400 hover:text-white";
+                }
+            });
+
+            // Translate all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang] && i18n[lang][key]) {
+                    el.innerText = i18n[lang][key];
+                }
+            });
+
+            // Update welcome message in chat
+            const welcomeEl = document.getElementById('chatWelcomeMessage');
+            if (welcomeEl) {
+                welcomeEl.innerHTML = i18n[lang].chatWelcome;
+            }
+
+            // Update arcade mode title overlay
+            setGameMode(mode);
+        }
+
+        function toggleAccordion(id) {
+            const body = document.getElementById(`accBody${id}`);
+            const icon = document.getElementById(`accIcon${id}`);
+            if (body.classList.contains('hidden')) {
+                body.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                body.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+    </script>
+
+    <script>
+        /* ============================================================
+           2. DUAL INTERACTIVE ARCADE ENGINE
+           ============================================================ */
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let mode = 'space'; // 'space' | 'ocean'
+        let isPlaying = false;
+        let isPaused = false;
+
+        const hudScoreVal = document.getElementById('hudScoreVal');
+        const hudHighScore = document.getElementById('hudHighScore');
+        const hudShield = document.getElementById('hudShield');
+        const hudModeLabel = document.getElementById('hudModeLabel');
+
+        let currentScore = 0;
+        let highScoreSpace = 0;
+        let highScoreOcean = 0;
+
+        const physics = {
+            gravity: 0.22,           
+            jumpForce: -5.2,         
+            obstacleSpeed: 2.3,      
+            obstacleGap: 200,        
+            obstacleSpawnRate: 140,  
+            playerX: 90
+        };
+
+        const player = {
+            x: physics.playerX,
+            y: 150,
+            vy: 0,
+            radius: 18,
+            shield: false,
+            rotation: 0
+        };
+
+        let obstacles = [];
+        let collectibles = [];
+        let particles = [];
+        let frameCount = 0;
+
+        function resizeCanvas() {
+            const container = document.getElementById('canvasContainer');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function setGameMode(selectedMode) {
+            mode = selectedMode;
+            const btnSpace = document.getElementById('btnModeSpace');
+            const btnOcean = document.getElementById('btnModeOcean');
+
+            if (mode === 'space') {
+                btnSpace.className = "px-6 py-3 rounded-2xl font-bold text-sm transition flex items-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/20";
+                btnOcean.className = "px-6 py-3 rounded-2xl font-bold text-sm transition flex items-center gap-2 glass-card text-slate-300 hover:text-white";
+                hudModeLabel.innerHTML = '<i class="fa-solid fa-shuttle-space text-cyan-400"></i> Artemis Launch';
+                hudHighScore.innerText = highScoreSpace;
+                
+                document.getElementById('overlayTitle').innerText = mode === 'space' ? i18n[currentLang].btnSpaceMode : i18n[currentLang].btnOceanMode;
+                document.getElementById('overlaySub').innerText = currentLang === 'es' ? "Esquiva meteoros y colecta estrellas de energía para activar tu escudo." : (currentLang === 'en' ? "Dodge meteors and collect energy stars to activate shields." : "Desvie de meteoros e colete estrelas de energia.");
+                document.getElementById('overlayIcon').className = "fa-solid fa-shuttle-space";
+            } else {
+                btnOcean.className = "px-6 py-3 rounded-2xl font-bold text-sm transition flex items-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/20";
+                btnSpace.className = "px-6 py-3 rounded-2xl font-bold text-sm transition flex items-center gap-2 glass-card text-slate-300 hover:text-white";
+                hudModeLabel.innerHTML = '<i class="fa-solid fa-fish-fins text-cyan-400"></i> Explorador Abisal';
+                hudHighScore.innerText = highScoreOcean;
+
+                document.getElementById('overlayTitle').innerText = i18n[currentLang].btnOceanMode;
+                document.getElementById('overlaySub').innerText = currentLang === 'es' ? "Navega entre calamares gigantes y fauna abisal. Recoge pérolas para resguardarte." : "Navegue entre lulas gigantes e fauna abissal.";
+                document.getElementById('overlayIcon').className = "fa-solid fa-fish-fins";
+            }
+
+            resetGame();
+            drawStaticFrame();
+        }
+
+        function triggerBoost() {
+            if (!isPlaying || isPaused) return;
+            player.vy = physics.jumpForce;
+            
+            for (let i = 0; i < 6; i++) {
+                particles.push({
+                    x: player.x - 10,
+                    y: player.y + (Math.random() * 10 - 5),
+                    vx: -Math.random() * 3 - 1,
+                    vy: Math.random() * 2 - 1,
+                    life: 20,
+                    color: mode === 'space' ? '#FF6B00' : '#00F0FF'
+                });
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'ArrowUp') {
+                e.preventDefault();
+                if (!isPlaying) {
+                    startGame();
+                } else {
+                    triggerBoost();
+                }
+            }
+        });
+
+        function startGame() {
+            document.getElementById('gameOverlay').classList.add('hidden');
+            resetGame();
+            isPlaying = true;
+            isPaused = false;
+            gameLoop();
+        }
+
+        function resetGame() {
+            player.y = canvas.height / 2;
+            player.vy = 0;
+            player.shield = false;
+            obstacles = [];
+            collectibles = [];
+            particles = [];
+            currentScore = 0;
+            frameCount = 0;
+            hudScoreVal.innerText = "0";
+            hudShield.classList.add('hidden');
+        }
+
+        function togglePause() {
+            if (!isPlaying) return;
+            isPaused = !isPaused;
+            if (!isPaused) gameLoop();
+        }
+
+        function gameOver() {
+            isPlaying = false;
+            if (mode === 'space') {
+                highScoreSpace = Math.max(highScoreSpace, currentScore);
+                hudHighScore.innerText = highScoreSpace;
+            } else {
+                highScoreOcean = Math.max(highScoreOcean, currentScore);
+                hudHighScore.innerText = highScoreOcean;
+            }
+
+            const overlay = document.getElementById('gameOverlay');
+            document.getElementById('overlayTitle').innerText = currentLang === 'es' ? "Misión Concluida" : (currentLang === 'en' ? "Mission Accomplished" : "Missão Concluída");
+            document.getElementById('overlaySub').innerText = `${i18n[currentLang].hudScore}: ${currentScore}`;
+            overlay.classList.remove('hidden');
+        }
+
+        function spawnObstacle() {
+            const gap = physics.obstacleGap;
+            const minHeight = 60;
+            const maxHeight = canvas.height - gap - minHeight;
+            const topHeight = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
+
+            obstacles.push({
+                x: canvas.width,
+                topHeight: topHeight,
+                bottomY: topHeight + gap,
+                width: 55,
+                rotation: 0,
+                passed: false
+            });
+
+            if (Math.random() < 0.5) {
+                collectibles.push({
+                    x: canvas.width + 25,
+                    y: topHeight + gap / 2 + (Math.random() * 40 - 20),
+                    radius: 12,
+                    collected: false,
+                    type: mode === 'space' ? 'star' : 'pearl'
+                });
+            }
+        }
+
+        function updatePhysics() {
+            frameCount++;
+            player.vy += physics.gravity;
+            player.y += player.vy;
+            player.rotation = Math.min(Math.PI / 4, Math.max(-Math.PI / 4, player.vy * 0.08));
+
+            if (player.y - player.radius < 0) {
+                player.y = player.radius;
+                player.vy = 0;
+            }
+            if (player.y + player.radius > canvas.height) {
+                if (player.shield) {
+                    player.shield = false;
+                    hudShield.classList.add('hidden');
+                    player.vy = physics.jumpForce;
+                } else {
+                    gameOver();
+                    return;
+                }
+            }
+
+            if (frameCount % physics.obstacleSpawnRate === 0) {
+                spawnObstacle();
+            }
+
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                let obs = obstacles[i];
+                obs.x -= physics.obstacleSpeed;
+                obs.rotation += 0.02;
+
+                if (!obs.passed && obs.x + obs.width < player.x) {
+                    obs.passed = true;
+                    currentScore += 10;
+                    hudScoreVal.innerText = currentScore;
+                }
+
+                const hitMargin = 8;
+                if (
+                    player.x + player.radius - hitMargin > obs.x &&
+                    player.x - player.radius + hitMargin < obs.x + obs.width
+                ) {
+                    if (
+                        player.y - player.radius + hitMargin < obs.topHeight ||
+                        player.y + player.radius - hitMargin > obs.bottomY
+                    ) {
+                        if (player.shield) {
+                            player.shield = false;
+                            hudShield.classList.add('hidden');
+                            obstacles.splice(i, 1);
+                            continue;
+                        } else {
+                            gameOver();
+                            return;
+                        }
+                    }
+                }
+
+                if (obs.x + obs.width < -100) {
+                    obstacles.splice(i, 1);
+                }
+            }
+
+            for (let i = collectibles.length - 1; i >= 0; i--) {
+                let col = collectibles[i];
+                col.x -= physics.obstacleSpeed;
+
+                const dx = player.x - col.x;
+                const dy = player.y - col.y;
+                const dist = Math.hypot(dx, dy);
+
+                if (dist < player.radius + col.radius) {
+                    currentScore += 25;
+                    hudScoreVal.innerText = currentScore;
+                    player.shield = true;
+                    hudShield.classList.remove('hidden');
+
+                    for (let p = 0; p < 8; p++) {
+                        particles.push({
+                            x: col.x,
+                            y: col.y,
+                            vx: (Math.random() - 0.5) * 4,
+                            vy: (Math.random() - 0.5) * 4,
+                            life: 25,
+                            color: '#FFD700'
+                        });
+                    }
+
+                    collectibles.splice(i, 1);
+                } else if (col.x < -20) {
+                    collectibles.splice(i, 1);
+                }
+            }
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life--;
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+        }
+
+        function drawBackground() {
+            if (mode === 'space') {
+                ctx.fillStyle = '#030712';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                for (let i = 0; i < 30; i++) {
+                    let sx = (i * 77 + frameCount * 0.3) % canvas.width;
+                    let sy = (i * 43) % canvas.height;
+                    ctx.fillRect(sx, sy, 1.5, 1.5);
+                }
+            } else {
+                let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, '#021526');
+                gradient.addColorStop(1, '#000814');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = 'rgba(0, 240, 255, 0.15)';
+                for (let i = 0; i < 20; i++) {
+                    let bx = (i * 91 + frameCount * 0.2) % canvas.width;
+                    let by = (canvas.height - (i * 37 + frameCount * 0.5) % canvas.height);
+                    ctx.beginPath();
+                    ctx.arc(bx, by, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        function drawPlayer() {
+            ctx.save();
+            ctx.translate(player.x, player.y);
+            ctx.rotate(player.rotation);
+
+            if (mode === 'space') {
+                ctx.fillStyle = '#E2E8F0';
+                ctx.beginPath();
+                ctx.moveTo(18, 0);
+                ctx.lineTo(-12, -10);
+                ctx.lineTo(-6, 0);
+                ctx.lineTo(-12, 10);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = '#00F0FF';
+                ctx.beginPath();
+                ctx.arc(4, 0, 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#FF6B00';
+                ctx.beginPath();
+                ctx.moveTo(-8, -4);
+                ctx.lineTo(-18 - Math.random() * 6, 0);
+                ctx.lineTo(-8, 4);
+                ctx.fill();
+            } else {
+                ctx.fillStyle = '#0284C7';
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 18, 12, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = 'rgba(0, 240, 255, 0.2)';
+                ctx.beginPath();
+                ctx.moveTo(12, 0);
+                ctx.lineTo(45, -15);
+                ctx.lineTo(45, 15);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = '#E0F2FE';
+                ctx.beginPath();
+                ctx.arc(5, -2, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            if (player.shield) {
+                ctx.strokeStyle = '#00F0FF';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.arc(0, 0, player.radius + 6, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
+        function drawObstacles() {
+            obstacles.forEach(obs => {
+                ctx.save();
+
+                if (mode === 'space') {
+                    ctx.fillStyle = '#334155';
+                    ctx.strokeStyle = '#475569';
+                    ctx.lineWidth = 2;
+
+                    ctx.beginPath();
+                    ctx.rect(obs.x, 0, obs.width, obs.topHeight);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.rect(obs.x, obs.bottomY, obs.width, canvas.height - obs.bottomY);
+                    ctx.fill();
+                    ctx.stroke();
+                } else {
+                    ctx.fillStyle = '#0F172A';
+                    ctx.strokeStyle = '#0284C7';
+                    ctx.lineWidth = 2;
+
+                    ctx.beginPath();
+                    ctx.rect(obs.x, 0, obs.width, obs.topHeight);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.rect(obs.x, obs.bottomY, obs.width, canvas.height - obs.bottomY);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            });
+        }
+
+        function drawCollectibles() {
+            collectibles.forEach(col => {
+                ctx.save();
+                ctx.translate(col.x, col.y);
+
+                if (col.type === 'star') {
+                    ctx.fillStyle = '#FFD700';
+                    ctx.beginPath();
+                    for (let i = 0; i < 5; i++) {
+                        ctx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * 12, -Math.sin((18 + i * 72) * Math.PI / 180) * 12);
+                        ctx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * 5, -Math.sin((54 + i * 72) * Math.PI / 180) * 5);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = '#F0FDFA';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 9, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.strokeStyle = '#38BDF8';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            });
+        }
+
+        function drawParticles() {
+            particles.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life / 25;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+            });
+        }
+
+        function drawStaticFrame() {
+            drawBackground();
+            drawObstacles();
+            drawCollectibles();
+            drawPlayer();
+        }
+
+        function gameLoop() {
+            if (!isPlaying || isPaused) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            updatePhysics();
+            drawBackground();
+            drawObstacles();
+            drawCollectibles();
+            drawParticles();
+            drawPlayer();
+
+            requestAnimationFrame(gameLoop);
+        }
+    </script>
+
+    <script>
+        /* ============================================================
+           3. EMBEDDED REGION-FREE AI ASSISTANT LOGIC
+           ============================================================ */
+        
+        const aiKnowledgeBase = {
+            navy_nasa: {
+                es: "La relación entre la **NASA** y la **Marina de EE.UU. (US Navy)** es histórica y estratégica. Desde las misiones Mercury hasta **Artemis**, la Marina proporciona portaaviones, helicópteros y buzos de rescate para recuperar las cápsulas al acuatizar. Además, los astronautas entrenan en el Laboratorio de Flotabilidad Neutra (NBL) usando técnicas de buceo militar.",
+                en: "The partnership between **NASA** and the **US Navy** is historically vital. From Mercury through **Artemis**, the Navy provides aircraft carriers, helicopters, and elite SEAL divers to recover crew capsules at sea. Furthermore, astronauts train in NASA's Neutral Buoyancy Lab using military dive protocols.",
+                pt: "A parceria entre a **NASA** e a **Marinha dos EUA** é historicamente vital. Das missões Mercury à **Artemis**, a Marinha fornece porta-aviões e mergulhadores para resgatar cápsulas no oceano. Além disso, os astronautas treinam no Laboratório de Flutuabilidade Neutra."
+            },
+            mariana: {
+                es: "La **Fosa de las Marianas** (10,935 m en el Abismo Challenger) presenta presiones de más de 1,000 atmósferas. La vida abisal incluye anfípodos gigantes, el pez caracol de las Marianas y bacterias piezófilas que no dependen de la luz solar sino de la quimiosíntesis.",
+                en: "The **Mariana Trench** (10,935 m at Challenger Deep) exerts pressure exceeding 1,000 atmospheres. Abyssal life includes supergiant amphipods, Mariana snailfish, and piezophilic bacteria that thrive via chemosynthesis without sunlight.",
+                pt: "A **Fossa das Marianas** (10.935 m na Depressão Challenger) possui pressões de mais de 1.000 atmosferas. A vida abissal inclui anfípodes gigantes, peixes-caracol e bactérias piezófilas."
+            },
+            artemis: {
+                es: "La misión **Artemis II** enviará una tripulación de cuatro astronautas a circunvalar la Luna a bordo de la nave **Orion** impulsada por el megacohete **SLS**, marcando el primer viaje tripulado a las cercanías lunares desde 1972.",
+                en: "The **Artemis II** mission will send four astronauts around the Moon aboard the **Orion** spacecraft powered by the **SLS** rocket, marking the first crewed lunar flyby mission since 1972.",
+                pt: "A missão **Artemis II** enviará quatro astronautas para sobrevoar a Lua a bordo da nave **Orion** impulsionada pelo foguete **SLS**, sendo a primeira missão tripulada à Lua desde 1972."
+            }
+        };
+
+        function sendQuickPrompt(key) {
+            const promptText = i18n[currentLang][`prompt${key === 'navy_nasa' ? '1' : (key === 'mariana' ? '2' : '3')}`];
+            document.getElementById('chatInput').value = promptText;
+            executeAiQuery(key, promptText);
+        }
+
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            const inputEl = document.getElementById('chatInput');
+            const text = inputEl.value.trim();
+            if (!text) return;
+
+            inputEl.value = '';
+            executeAiQuery(null, text);
+        }
+
+        function executeAiQuery(predefinedKey, queryText) {
+            appendUserMessage(queryText);
+            const loadingId = appendLoadingMessage();
+
+            setTimeout(() => {
+                removeMessage(loadingId);
+                let reply = "";
+
+                if (predefinedKey && aiKnowledgeBase[predefinedKey]) {
+                    reply = aiKnowledgeBase[predefinedKey][currentLang];
+                } else {
+                    // Generative fallback logic
+                    const lower = queryText.toLowerCase();
+                    if (lower.includes('marina') || lower.includes('navy') || lower.includes('barco') || lower.includes('ship')) {
+                        reply = aiKnowledgeBase.navy_nasa[currentLang];
+                    } else if (lower.includes('mariana') || lower.includes('ocean') || lower.includes('pez') || lower.includes('fish') || lower.includes('abismo')) {
+                        reply = aiKnowledgeBase.mariana[currentLang];
+                    } else {
+                        reply = aiKnowledgeBase.artemis[currentLang];
+                    }
+                }
+
+                appendBotMessage(reply);
+            }, 700);
+        }
+
+        function appendUserMessage(text) {
+            const container = document.getElementById('chatMessages');
+            const msgHtml = `
+                <div class="flex items-start justify-end gap-3">
+                    <div class="bg-cyan-500 text-slate-950 font-semibold rounded-2xl p-3.5 text-xs sm:text-sm max-w-xl leading-relaxed shadow-lg">
+                        ${escapeHtml(text)}
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-cyan-400 text-slate-950 flex items-center justify-center text-xs font-bold shrink-0">
+                        Tú
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', msgHtml);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendBotMessage(text) {
+            const container = document.getElementById('chatMessages');
+            const msgHtml = `
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-cyan-950 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-xs shrink-0">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 text-xs sm:text-sm text-slate-200 max-w-xl leading-relaxed">
+                        ${formatMarkdown(text)}
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', msgHtml);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendLoadingMessage() {
+            const container = document.getElementById('chatMessages');
+            const id = 'loading_' + Date.now();
+            const msgHtml = `
+                <div id="${id}" class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-cyan-950 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-xs shrink-0">
+                        <i class="fa-solid fa-brain animate-pulse"></i>
+                    </div>
+                    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 text-xs text-slate-400 flex items-center gap-2">
+                        <span>Procesando consulta...</span>
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', msgHtml);
+            container.scrollTop = container.scrollHeight;
+            return id;
+        }
+
+        function removeMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function formatMarkdown(text) {
+            let formatted = escapeHtml(text);
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            formatted = formatted.replace(/\n/g, '<br/>');
+            return formatted;
+        }
+    </script>
+
+    <script>
+        /* ============================================================
+           4. RATINGS & COMMENTS SYSTEM ("IMPROVE NEXUS") WITH STORAGE
+           ============================================================ */
+        
+        let userSelectedRating = 5;
+
+        // Default seed reviews
+        const initialReviews = [
+            {
+                name: "Dra. Elena Rostova",
+                rating: 5,
+                comment: "Excelente plataforma educativa. La correlación entre la Marina y los entrenamientos de la NASA está perfectamente documentada.",
+                date: "2026-02-14"
+            },
+            {
+                name: "Commander Marcus Vance",
+                rating: 5,
+                comment: "Impressive UI design and smooth arcade simulator. Great tool for young oceanography students.",
+                date: "2026-02-28"
+            },
+            {
+                name: "Dr. Thiago Silva",
+                rating: 4,
+                comment: "Ótima plataforma! O suporte multilíngue funciona de forma impecável e o assistente de IA responde muito rápido.",
+                date: "2026-03-02"
+            }
+        ];
+
+        function getSavedReviews() {
+            const stored = localStorage.getItem('nexus_reviews_db');
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch(e) {
+                    return initialReviews;
+                }
+            }
+            return initialReviews;
+        }
+
+        function saveReviews(reviewsArray) {
+            localStorage.setItem('nexus_reviews_db', JSON.stringify(reviewsArray));
+        }
+
+        function setFormRating(val) {
+            userSelectedRating = val;
+            renderStarPicker(val);
+            document.getElementById('ratingValLabel').innerText = `${val}.0 / 5.0`;
+        }
+
+        function hoverFormRating(val) {
+            renderStarPicker(val);
+        }
+
+        function resetFormRating() {
+            renderStarPicker(userSelectedRating);
+        }
+
+        function renderStarPicker(val) {
+            const stars = document.querySelectorAll('#starPicker i');
+            stars.forEach((star, index) => {
+                if (index < val) {
+                    star.className = "fa-solid fa-star text-amber-400";
+                } else {
+                    star.className = "fa-solid fa-star text-slate-700";
+                }
+            });
+        }
+
+        function handleReviewSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('reviewerName').value.trim();
+            const comment = document.getElementById('reviewerComment').value.trim();
+
+            if (!name || !comment) return;
+
+            const newReview = {
+                name: name,
+                rating: userSelectedRating,
+                comment: comment,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            const currentList = getSavedReviews();
+            currentList.unshift(newReview);
+            saveReviews(currentList);
+
+            // Reset form
+            document.getElementById('reviewerName').value = '';
+            document.getElementById('reviewerComment').value = '';
+            setFormRating(5);
+
+            renderReviewsFeed();
+        }
+
+        function renderReviewsFeed() {
+            const reviews = getSavedReviews();
+            const feedContainer = document.getElementById('reviewsFeed');
+            feedContainer.innerHTML = '';
+
+            let totalRating = 0;
+
+            reviews.forEach(r => {
+                totalRating += r.rating;
+
+                let starsHtml = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= r.rating) {
+                        starsHtml += '<i class="fa-solid fa-star text-amber-400"></i>';
+                    } else {
+                        starsHtml += '<i class="fa-solid fa-star text-slate-700"></i>';
+                    }
+                }
+
+                const cardHtml = `
+                    <div class="glass-card p-4 rounded-2xl border border-slate-800/80">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <span class="font-display font-bold text-white text-sm block">${escapeHtml(r.name)}</span>
+                                <span class="text-[10px] text-slate-500 font-mono">${r.date}</span>
+                            </div>
+                            <div class="flex text-xs gap-1">
+                                ${starsHtml}
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed font-light">${escapeHtml(r.comment)}</p>
+                    </div>
+                `;
+                feedContainer.insertAdjacentHTML('beforeend', cardHtml);
+            });
+
+            // Update Score Summary
+            const avg = reviews.length > 0 ? (totalRating / reviews.length).toFixed(1) : "5.0";
+            document.getElementById('avgScoreDisplay').innerText = avg;
+            document.getElementById('totalReviewsCount').innerText = reviews.length;
+        }
+
+        // Initialize App on window load
+        window.onload = function() {
+            setLanguage('es');
+            renderReviewsFeed();
+            setGameMode('space');
+        };
+    </script>
+</body>
+</html>
